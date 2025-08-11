@@ -3,11 +3,137 @@
 // Global variables
 let currentPlatform = 'twitter';
 let currentAnalysis = {};
+let isMobile = false;
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
     initializeApp();
+    detectMobileDevice();
+    optimizeForMobile();
 });
+
+function detectMobileDevice() {
+    // Detect mobile device
+    isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) 
+              || window.innerWidth <= 768;
+    
+    // Add mobile class to body
+    if (isMobile) {
+        document.body.classList.add('mobile-device');
+        console.log('Mobile device detected');
+    }
+    
+    // Listen for resize events
+    window.addEventListener('resize', function() {
+        const wasMobile = isMobile;
+        isMobile = window.innerWidth <= 768;
+        
+        if (wasMobile !== isMobile) {
+            optimizeForMobile();
+        }
+    });
+}
+
+function optimizeForMobile() {
+    if (isMobile) {
+        // Mobile-specific optimizations
+        optimizeMobileUI();
+        optimizeMobileInteractions();
+        optimizeMobileCharts();
+    }
+}
+
+function optimizeMobileUI() {
+    // Adjust viewport for mobile
+    let viewport = document.querySelector('meta[name="viewport"]');
+    if (!viewport) {
+        viewport = document.createElement('meta');
+        viewport.name = 'viewport';
+        document.head.appendChild(viewport);
+    }
+    viewport.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no';
+    
+    // Add mobile-specific styles
+    if (!document.getElementById('mobile-styles')) {
+        const mobileStyles = document.createElement('style');
+        mobileStyles.id = 'mobile-styles';
+        mobileStyles.textContent = `
+            .mobile-device {
+                -webkit-tap-highlight-color: transparent;
+                -webkit-touch-callout: none;
+                -webkit-user-select: none;
+                user-select: none;
+            }
+            
+            .mobile-device input, .mobile-device textarea {
+                -webkit-user-select: text;
+                user-select: text;
+            }
+            
+            .mobile-device .nav-btn,
+            .mobile-device .platform-btn,
+            .mobile-device .analyze-btn {
+                touch-action: manipulation;
+            }
+            
+            @media (max-width: 768px) {
+                .mobile-device .chart-container canvas {
+                    max-width: 100% !important;
+                    height: auto !important;
+                }
+                
+                .mobile-device .traffic-stats {
+                    grid-template-columns: 1fr 1fr !important;
+                }
+                
+                .mobile-device .demographics {
+                    grid-template-columns: 1fr !important;
+                }
+            }
+        `;
+        document.head.appendChild(mobileStyles);
+    }
+}
+
+function optimizeMobileInteractions() {
+    // Add touch event handlers
+    const buttons = document.querySelectorAll('.nav-btn, .platform-btn, .analyze-btn');
+    buttons.forEach(button => {
+        button.addEventListener('touchstart', function() {
+            this.style.transform = 'scale(0.95)';
+        });
+        
+        button.addEventListener('touchend', function() {
+            this.style.transform = '';
+        });
+    });
+    
+    // Optimize input focus for mobile
+    const inputs = document.querySelectorAll('input[type="url"], input[type="text"]');
+    inputs.forEach(input => {
+        input.addEventListener('focus', function() {
+            if (isMobile) {
+                // Scroll to input on mobile
+                setTimeout(() => {
+                    this.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 300);
+            }
+        });
+    });
+}
+
+function optimizeMobileCharts() {
+    // Override chart options for mobile
+    if (typeof Chart !== 'undefined') {
+        Chart.defaults.responsive = true;
+        Chart.defaults.maintainAspectRatio = false;
+        
+        if (isMobile) {
+            Chart.defaults.plugins.legend.labels.font.size = 10;
+            Chart.defaults.scale.ticks.font.size = 9;
+        }
+    }
+}
 
 function initializeApp() {
     // Navigation functionality
@@ -89,6 +215,14 @@ async function analyzeWebsite() {
     document.getElementById('website-loading').style.display = 'block';
     document.getElementById('website-results').style.display = 'none';
 
+    // Scroll to loading section on mobile
+    if (isMobile) {
+        document.getElementById('website-loading').scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'center' 
+        });
+    }
+
     try {
         // Get real website data with faster analysis
         const analysisData = await getRealWebsiteData(url);
@@ -111,6 +245,16 @@ async function analyzeWebsite() {
         // Update traffic data if included
         if (includeTraffic && analysisData.trafficData) {
             updateTrafficResults(analysisData.trafficData);
+        }
+
+        // Scroll to results on mobile
+        if (isMobile) {
+            setTimeout(() => {
+                document.getElementById('website-results').scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'start' 
+                });
+            }, 500);
         }
 
         showAlert('تم تحليل الموقع بنجاح! 🎉', 'success');
@@ -772,6 +916,48 @@ function createTrafficChart(monthlyData) {
     const ctx = document.getElementById('traffic-chart');
     if (!ctx) return;
     
+    // Mobile-optimized chart options
+    const chartOptions = {
+        responsive: true,
+        maintainAspectRatio: !isMobile,
+        aspectRatio: isMobile ? 1.5 : 2,
+        plugins: {
+            legend: {
+                labels: {
+                    font: { 
+                        family: 'Cairo',
+                        size: isMobile ? 10 : 12
+                    }
+                }
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    font: { 
+                        family: 'Cairo',
+                        size: isMobile ? 9 : 11
+                    }
+                }
+            },
+            x: {
+                ticks: {
+                    font: { 
+                        family: 'Cairo',
+                        size: isMobile ? 9 : 11
+                    },
+                    maxRotation: isMobile ? 45 : 0
+                }
+            }
+        }
+    };
+    
+    // Adjust height for mobile
+    if (isMobile) {
+        ctx.style.height = '200px';
+    }
+    
     new Chart(ctx, {
         type: 'line',
         data: {
@@ -781,34 +967,12 @@ function createTrafficChart(monthlyData) {
                 data: monthlyData.map(item => item.visitors),
                 borderColor: '#667eea',
                 backgroundColor: 'rgba(102, 126, 234, 0.1)',
-                borderWidth: 3,
+                borderWidth: isMobile ? 2 : 3,
                 fill: true,
                 tension: 0.4
             }]
         },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    labels: {
-                        font: { family: 'Cairo' }
-                    }
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        font: { family: 'Cairo' }
-                    }
-                },
-                x: {
-                    ticks: {
-                        font: { family: 'Cairo' }
-                    }
-                }
-            }
-        }
+        options: chartOptions
     });
 }
 
@@ -826,6 +990,14 @@ async function analyzeSocialAccount() {
     document.getElementById('social-loading').style.display = 'block';
     document.getElementById('social-results').style.display = 'none';
     
+    // Scroll to loading section on mobile
+    if (isMobile) {
+        document.getElementById('social-loading').scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'center' 
+        });
+    }
+    
     try {
         // Simulate analysis process
         await simulateSocialAnalysis(username, currentPlatform);
@@ -833,6 +1005,16 @@ async function analyzeSocialAccount() {
         // Hide loading and show results
         document.getElementById('social-loading').style.display = 'none';
         document.getElementById('social-results').style.display = 'block';
+        
+        // Scroll to results on mobile
+        if (isMobile) {
+            setTimeout(() => {
+                document.getElementById('social-results').scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'start' 
+                });
+            }, 500);
+        }
         
         showAlert('تم تحليل الحساب بنجاح!', 'success');
         

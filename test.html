@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Script</title>
+</head>
+<body>
+    <h1>Test Analysis Script</h1>
+    
+    <script>
+        // Test the getRealWebsiteData function directly
+        async function testScript() {
+            console.log('Testing script...');
+            
+            // Test URL
+            const testUrl = 'https://www.google.com';
+            
+            try {
+                console.log('Testing with URL:', testUrl);
+                
+                // Basic URL validation
+                const isValid = new URL(testUrl);
+                console.log('URL is valid:', isValid);
+                
+                // Test basic fetch
+                const response = await fetch(`https://opengraph.io/api/1.1/site/${encodeURIComponent(testUrl)}?app_id=demo`);
+                console.log('API Response status:', response.status);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('API Data received:', data);
+                } else {
+                    console.log('API request failed');
+                }
+                
+            } catch (error) {
+                console.error('Test failed:', error);
+            }
+        }
+        
+        // Run test when page loads
+        window.onload = testScript;
+    </script>
+</body>
+</html>
