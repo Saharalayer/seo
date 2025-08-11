@@ -9,7 +9,7 @@
 ## 🇸🇦 العربية
 
 ### 🧠 نظرة عامة  
-سكربت "أدوات التحليل المتطورة" هو أداة تحليل شاملة تهدف إلى جمع وتحليل البيانات من المواقع الإلكترونية وحسابات التواصل الاجتماعي، لتقديم رؤى قابلة للتنفيذ تساعد في تحسين الأداء الرقمي واتخاذ قرارات استراتيجية.
+سكربت "أدوات التحليل المتطورة" هو أداة تحليل شاملة تهدف إلى جمع وتحليل البيانات من المواقع الإلكترونية وحسابات التواصل الاجتماعي، لتوليد ملفات جاهزة للعرض على موقع العميل، دون الحاجة إلى تشغيل يدوي أو تدخل تقني من المستخدم النهائي.
 
 ### ✅ الميزات الرئيسية  
 - تحليل حركة الزوار على المواقع الإلكترونية  
@@ -17,9 +17,54 @@
 - توليد تقارير مرئية ورسوم بيانية ديناميكية  
 - دعم متعدد للمنصات: Instagram, Facebook, X (Twitter), LinkedIn  
 - تصنيف المحتوى حسب الأداء والزمن والجمهور  
-- تصدير النتائج بصيغ CSV وPDF
+- تصدير النتائج بصيغ CSV وPDF جاهزة للرفع
 
-### 🚀 طريقة التشغيل  
-```bash
-pip install -r requirements.txt
-python main.py
+### 📥 المدخلات  
+- روابط مواقع إلكترونية  
+- معرفات حسابات التواصل  
+- مفاتيح API (اختياري)
+
+### 📤 المخرجات  
+- ملفات تحليلية جاهزة للعرض على موقع العميل  
+- رسوم بيانية تفاعلية  
+- توصيات لتحسين الأداء الرقمي
+
+### 📌 ملاحظات  
+- السكربت يُستخدم داخليًا من قبل فريق التحليل  
+- لا يتطلب تشغيل مباشر من العميل  
+- قابل للتخصيص حسب احتياجات كل مشروع
+
+---
+
+## 🇬🇧 English
+
+### 🧠 Overview  
+**Advanced Analytics Tools** is a comprehensive script designed to collect and analyze data from websites and social media accounts, generating ready-to-publish files for client websites. No manual execution or technical setup is required by the end user.
+
+### ✅ Key Features  
+- Website traffic analysis  
+- Social media engagement tracking  
+- Dynamic visual reports and charts  
+- Multi-platform support: Instagram, Facebook, X (Twitter), LinkedIn  
+- Content classification by performance, time, and audience  
+- Export results as CSV and PDF files ready for upload
+
+### 📥 Inputs  
+- Website URLs  
+- Social media account handles  
+- API keys (optional)
+
+### 📤 Outputs  
+- Analytical files ready for client websites  
+- Interactive charts  
+- Performance recommendations
+
+### 📌 Notes  
+- Used internally by the analytics team  
+- No direct execution required by the client  
+- Fully customizable for each project
+
+---
+
+## 📄 License  
+This project is licensed under the MIT License. Feel free to use, modify, and distribute.
