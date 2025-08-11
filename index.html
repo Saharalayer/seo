@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أدوات التحليل المتطورة</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js" rel="preload" as="script">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="title">
+                    <i class="fas fa-chart-line"></i>
+                    أدوات التحليل المتطورة
+                </h1>
+                <p class="subtitle">تحليل شامل للمواقع الإلكترونية وحسابات السوشيال ميديا</p>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="nav">
+            <div class="nav-container">
+                <button class="nav-btn active" data-tool="website-analyzer">
+                    <i class="fas fa-globe"></i>
+                    <span>تحليل الموقع</span>
+                </button>
+                <button class="nav-btn" data-tool="social-analyzer">
+                    <i class="fas fa-users"></i>
+                    <span>تحليل السوشيال ميديا</span>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Tools Container -->
+        <main class="main">
+            <!-- Website Analyzer Tool -->
+            <div class="tool-panel active" id="website-analyzer">
+                <div class="tool-header">
+                    <h2><i class="fas fa-globe"></i> تحليل الموقع الإلكتروني</h2>
+                    <p>تحليل شامل للموقع من ناحية SEO والأداء والأمان</p>
+                </div>
+                
+                <div class="website-analyzer">
+                    <div class="input-section">
+                        <div class="url-input-group">
+                            <label for="website-url">رابط الموقع:</label>
+                            <div class="input-with-button">
+                                <input type="url" id="website-url" placeholder="https://example.com" dir="ltr">
+                                <button onclick="analyzeWebsite()" class="analyze-btn">
+                                    <i class="fas fa-search"></i> تحليل
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Analysis Options -->
+                        <div class="analysis-options">
+                            <h4>خيارات التحليل:</h4>
+                            <div class="options-grid">
+                                <label class="option-item">
+                                    <input type="checkbox" id="include-traffic" checked>
+                                    <span><i class="fas fa-chart-line"></i> تحليل حركة الزوار</span>
+                                </label>
+                                <label class="option-item">
+                                    <input type="checkbox" id="include-performance" checked>
+                                    <span><i class="fas fa-tachometer-alt"></i> تحليل الأداء</span>
+                                </label>
+                                <label class="option-item">
+                                    <input type="checkbox" id="include-seo" checked>
+                                    <span><i class="fas fa-search"></i> تحليل SEO</span>
+                                </label>
+                                <label class="option-item">
+                                    <input type="checkbox" id="include-social" checked>
+                                    <span><i class="fas fa-share-alt"></i> التواصل الاجتماعي</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="loading-spinner" id="website-loading" style="display: none;">
+                        <div class="spinner"></div>
+                        <p>جاري تحليل الموقع...</p>
+                    </div>
+
+                    <div class="analysis-results" id="website-results" style="display: none;">
+                        <!-- Basic Info -->
+                        <div class="result-section">
+                            <h3><i class="fas fa-info-circle"></i> معلومات أساسية</h3>
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <span class="label">عنوان الصفحة:</span>
+                                    <span class="value" id="site-title">-</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">الوصف:</span>
+                                    <span class="value" id="site-description">-</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">حالة الموقع:</span>
+                                    <span class="value" id="site-status">-</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SEO Analysis -->
+                        <div class="result-section">
+                            <h3><i class="fas fa-search-plus"></i> تحليل SEO</h3>
+                            <div class="seo-score">
+                                <div class="score-circle">
+                                    <canvas id="seo-chart" width="120" height="120"></canvas>
+                                    <div class="score-text">
+                                        <span id="seo-score">0</span>
+                                        <small>/100</small>
+                                    </div>
+                                </div>
+                                <div class="score-details">
+                                    <div class="score-item">
+                                        <span class="score-label">عنوان الصفحة</span>
+                                        <div class="score-bar">
+                                            <div class="score-fill" id="title-score"></div>
+                                        </div>
+                                    </div>
+                                    <div class="score-item">
+                                        <span class="score-label">الوصف</span>
+                                        <div class="score-bar">
+                                            <div class="score-fill" id="description-score"></div>
+                                        </div>
+                                    </div>
+                                    <div class="score-item">
+                                        <span class="score-label">العناوين</span>
+                                        <div class="score-bar">
+                                            <div class="score-fill" id="headings-score"></div>
+                                        </div>
+                                    </div>
+                                    <div class="score-item">
+                                        <span class="score-label">الصور</span>
+                                        <div class="score-bar">
+                                            <div class="score-fill" id="images-score"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Performance -->
+                        <div class="result-section">
+                            <h3><i class="fas fa-tachometer-alt"></i> الأداء</h3>
+                            <div class="performance-metrics">
+                                <div class="metric-item">
+                                    <div class="metric-icon">
+                                        <i class="fas fa-clock"></i>
+                                    </div>
+                                    <div class="metric-info">
+                                        <span class="metric-label">وقت التحميل</span>
+                                        <span class="metric-value" id="load-time">-</span>
+                                    </div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="metric-icon">
+                                        <i class="fas fa-mobile-alt"></i>
+                                    </div>
+                                    <div class="metric-info">
+                                        <span class="metric-label">متوافق مع الجوال</span>
+                                        <span class="metric-value" id="mobile-friendly">-</span>
+                                    </div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="metric-icon">
+                                        <i class="fas fa-shield-alt"></i>
+                                    </div>
+                                    <div class="metric-info">
+                                        <span class="metric-label">شهادة SSL</span>
+                                        <span class="metric-value" id="ssl-status">-</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Technical Details -->
+                        <div class="result-section">
+                            <h3><i class="fas fa-cog"></i> التفاصيل التقنية</h3>
+                            <div class="tech-details">
+                                <div class="detail-item">
+                                    <span class="detail-label">عدد الصور:</span>
+                                    <span class="detail-value" id="images-count">-</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">عدد الروابط الداخلية:</span>
+                                    <span class="detail-value" id="internal-links">-</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">عدد الروابط الخارجية:</span>
+                                    <span class="detail-value" id="external-links">-</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">حجم الصفحة:</span>
+                                    <span class="detail-value" id="page-size">-</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Traffic Analysis -->
+                        <div class="result-section" id="traffic-section" style="display: none;">
+                            <h3><i class="fas fa-chart-line"></i> تحليل حركة الزوار</h3>
+                            <div class="traffic-metrics">
+                                <div class="traffic-stats">
+                                    <div class="stat-card">
+                                        <div class="stat-icon">
+                                            <i class="fas fa-users"></i>
+                                        </div>
+                                        <div class="stat-info">
+                                            <span class="stat-number" id="visitors-count">0</span>
+                                            <span class="stat-label">زائر شهرياً</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="stat-card">
+                                        <div class="stat-icon">
+                                            <i class="fas fa-eye"></i>
+                                        </div>
+                                        <div class="stat-info">
+                                            <span class="stat-number" id="page-views">0</span>
+                                            <span class="stat-label">مشاهدة للصفحة</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="stat-card">
+                                        <div class="stat-icon">
+                                            <i class="fas fa-percentage"></i>
+                                        </div>
+                                        <div class="stat-info">
+                                            <span class="stat-number" id="bounce-rate">0%</span>
+                                            <span class="stat-label">معدل الارتداد</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="stat-card">
+                                        <div class="stat-icon">
+                                            <i class="fas fa-clock"></i>
+                                        </div>
+                                        <div class="stat-info">
+                                            <span class="stat-number" id="session-duration">0s</span>
+                                            <span class="stat-label">متوسط الجلسة</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Traffic Chart -->
+                                <div class="chart-container">
+                                    <h4>حركة الزوار خلال الشهر الماضي</h4>
+                                    <canvas id="traffic-chart" width="400" height="200"></canvas>
+                                </div>
+                                
+                                <!-- Top Pages -->
+                                <div class="top-pages">
+                                    <h4>أهم الصفحات</h4>
+                                    <div class="pages-list" id="top-pages-list">
+                                        <!-- Will be populated by JavaScript -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Recommendations -->
+                        <div class="result-section">
+                            <h3><i class="fas fa-lightbulb"></i> التوصيات</h3>
+                            <div class="recommendations" id="recommendations">
+                                <!-- Recommendations will be populated by JavaScript -->
+                            </div>
+                        </div>
+                        
+                        <!-- Export Options -->
+                        <div class="result-section">
+                            <h3><i class="fas fa-download"></i> تصدير التقرير</h3>
+                            <div class="export-options">
+                                <button onclick="exportToPDF()" class="export-btn pdf-btn">
+                                    <i class="fas fa-file-pdf"></i>
+                                    تصدير PDF
+                                </button>
+                                <button onclick="exportToCSV()" class="export-btn csv-btn">
+                                    <i class="fas fa-file-csv"></i>
+                                    تصدير CSV
+                                </button>
+                                <button onclick="exportToImage()" class="export-btn image-btn">
+                                    <i class="fas fa-file-image"></i>
+                                    تصدير صورة
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Social Media Analyzer Tool -->
+            <div class="tool-panel" id="social-analyzer">
+                <div class="tool-header">
+                    <h2><i class="fas fa-users"></i> تحليل حسابات السوشيال ميديا</h2>
+                    <p>تحليل شامل لحسابات التواصل الاجتماعي وإحصائياتها</p>
+                </div>
+                
+                <div class="social-analyzer">
+                    <div class="platform-selection">
+                        <h3>اختر المنصة:</h3>
+                        <div class="platform-buttons">
+                            <button class="platform-btn active" data-platform="twitter">
+                                <i class="fab fa-twitter"></i>
+                                <span>تويتر</span>
+                            </button>
+                            <button class="platform-btn" data-platform="instagram">
+                                <i class="fab fa-instagram"></i>
+                                <span>إنستقرام</span>
+                            </button>
+                            <button class="platform-btn" data-platform="facebook">
+                                <i class="fab fa-facebook"></i>
+                                <span>فيسبوك</span>
+                            </button>
+                            <button class="platform-btn" data-platform="linkedin">
+                                <i class="fab fa-linkedin"></i>
+                                <span>لينكد إن</span>
+                            </button>
+                            <button class="platform-btn" data-platform="youtube">
+                                <i class="fab fa-youtube"></i>
+                                <span>يوتيوب</span>
+                            </button>
+                            <button class="platform-btn" data-platform="tiktok">
+                                <i class="fab fa-tiktok"></i>
+                                <span>تيك توك</span>
+                            </button>
+                            <button class="platform-btn" data-platform="snapchat">
+                                <i class="fab fa-snapchat"></i>
+                                <span>سناب شات</span>
+                            </button>
+                            <button class="platform-btn" data-platform="pinterest">
+                                <i class="fab fa-pinterest"></i>
+                                <span>بنترست</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="username-input-section">
+                        <div class="username-input-group">
+                            <label for="social-username">اسم المستخدم:</label>
+                            <div class="input-with-button">
+                                <div class="username-input-wrapper">
+                                    <span class="platform-prefix" id="platform-prefix">@</span>
+                                    <input type="text" id="social-username" placeholder="username" dir="ltr">
+                                </div>
+                                <button onclick="analyzeSocialAccount()" class="analyze-btn">
+                                    <i class="fas fa-search"></i> تحليل
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="loading-spinner" id="social-loading" style="display: none;">
+                        <div class="spinner"></div>
+                        <p>جاري تحليل الحساب...</p>
+                    </div>
+
+                    <div class="analysis-results" id="social-results" style="display: none;">
+                        <!-- Profile Overview -->
+                        <div class="result-section">
+                            <h3><i class="fas fa-user"></i> نظرة عامة على الحساب</h3>
+                            <div class="profile-overview">
+                                <div class="profile-image">
+                                    <img id="profile-avatar" src="" alt="Profile Picture">
+                                </div>
+                                <div class="profile-info">
+                                    <h4 id="profile-name">-</h4>
+                                    <p id="profile-bio">-</p>
+                                    <div class="profile-stats">
+                                        <div class="stat-item">
+                                            <span class="stat-number" id="followers-count">-</span>
+                                            <span class="stat-label">متابع</span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <span class="stat-number" id="following-count">-</span>
+                                            <span class="stat-label">يتابع</span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <span class="stat-number" id="posts-count">-</span>
+                                            <span class="stat-label">منشور</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Engagement Analytics -->
+                        <div class="result-section">
+                            <h3><i class="fas fa-chart-bar"></i> تحليل التفاعل</h3>
+                            <div class="engagement-metrics">
+                                <div class="metric-card">
+                                    <div class="metric-header">
+                                        <i class="fas fa-heart"></i>
+                                        <span>معدل الإعجاب</span>
+                                    </div>
+                                    <div class="metric-value" id="avg-likes">-</div>
+                                    <div class="metric-trend" id="likes-trend">-</div>
+                                </div>
+                                <div class="metric-card">
+                                    <div class="metric-header">
+                                        <i class="fas fa-comment"></i>
+                                        <span>معدل التعليقات</span>
+                                    </div>
+                                    <div class="metric-value" id="avg-comments">-</div>
+                                    <div class="metric-trend" id="comments-trend">-</div>
+                                </div>
+                                <div class="metric-card">
+                                    <div class="metric-header">
+                                        <i class="fas fa-share"></i>
+                                        <span>معدل المشاركات</span>
+                                    </div>
+                                    <div class="metric-value" id="avg-shares">-</div>
+                                    <div class="metric-trend" id="shares-trend">-</div>
+                                </div>
+                                <div class="metric-card">
+                                    <div class="metric-header">
+                                        <i class="fas fa-percentage"></i>
+                                        <span>معدل التفاعل</span>
+                                    </div>
+                                    <div class="metric-value" id="engagement-rate">-</div>
+                                    <div class="metric-trend" id="engagement-trend">-</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Content Analysis -->
+                        <div class="result-section">
+                            <h3><i class="fas fa-file-alt"></i> تحليل المحتوى</h3>
+                            <div class="content-analysis">
+                                <div class="posting-frequency">
+                                    <h4>معدل النشر</h4>
+                                    <canvas id="posting-chart" width="400" height="200"></canvas>
+                                </div>
+                                <div class="hashtag-analysis">
+                                    <h4>الهاشتاجات الأكثر استخداماً</h4>
+                                    <div class="hashtag-cloud" id="hashtag-cloud">
+                                        <!-- Hashtags will be populated by JavaScript -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Growth Analysis -->
+                        <div class="result-section">
+                            <h3><i class="fas fa-trending-up"></i> تحليل النمو</h3>
+                            <div class="growth-metrics">
+                                <div class="growth-item">
+                                    <span class="growth-label">نمو المتابعين (30 يوم):</span>
+                                    <span class="growth-value" id="follower-growth">-</span>
+                                </div>
+                                <div class="growth-item">
+                                    <span class="growth-label">أفضل وقت للنشر:</span>
+                                    <span class="growth-value" id="best-time">-</span>
+                                </div>
+                                <div class="growth-item">
+                                    <span class="growth-label">أفضل يوم للنشر:</span>
+                                    <span class="growth-value" id="best-day">-</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Advanced Analytics -->
+                        <div class="result-section">
+                            <h3><i class="fas fa-chart-pie"></i> تحليل متقدم</h3>
+                            <div class="advanced-analytics">
+                                <!-- Audience Demographics -->
+                                <div class="analytics-section">
+                                    <h4>تحليل الجمهور</h4>
+                                    <div class="demographics">
+                                        <div class="demo-chart">
+                                            <canvas id="age-chart" width="200" height="200"></canvas>
+                                            <div class="chart-label">الفئات العمرية</div>
+                                        </div>
+                                        <div class="demo-chart">
+                                            <canvas id="gender-chart" width="200" height="200"></canvas>
+                                            <div class="chart-label">الجنس</div>
+                                        </div>
+                                        <div class="demo-chart">
+                                            <canvas id="location-chart" width="200" height="200"></canvas>
+                                            <div class="chart-label">المواقع الجغرافية</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Content Performance -->
+                                <div class="analytics-section">
+                                    <h4>أداء المحتوى</h4>
+                                    <div class="content-performance">
+                                        <div class="performance-metric">
+                                            <span class="metric-name">أفضل محتوى:</span>
+                                            <span class="metric-result" id="top-content-type">المحتوى المرئي</span>
+                                        </div>
+                                        <div class="performance-metric">
+                                            <span class="metric-name">معدل الوصول:</span>
+                                            <span class="metric-result" id="reach-rate">85%</span>
+                                        </div>
+                                        <div class="performance-metric">
+                                            <span class="metric-name">معدل الحفظ:</span>
+                                            <span class="metric-result" id="save-rate">12%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Engagement Timeline -->
+                                <div class="analytics-section">
+                                    <h4>جدول التفاعل الزمني</h4>
+                                    <canvas id="engagement-timeline" width="400" height="200"></canvas>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Export Options for Social -->
+                        <div class="result-section">
+                            <h3><i class="fas fa-download"></i> تصدير تقرير السوشيال ميديا</h3>
+                            <div class="export-options">
+                                <button onclick="exportSocialToPDF()" class="export-btn pdf-btn">
+                                    <i class="fas fa-file-pdf"></i>
+                                    تصدير PDF
+                                </button>
+                                <button onclick="exportSocialToCSV()" class="export-btn csv-btn">
+                                    <i class="fas fa-file-csv"></i>
+                                    تصدير CSV
+                                </button>
+                                <button onclick="exportSocialToImage()" class="export-btn image-btn">
+                                    <i class="fas fa-file-image"></i>
+                                    تصدير صورة
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Recommendations -->
+                        <div class="result-section">
+                            <h3><i class="fas fa-lightbulb"></i> توصيات لتحسين الحساب</h3>
+                            <div class="social-recommendations" id="social-recommendations">
+                                <!-- Recommendations will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3><i class="fas fa-chart-line"></i> أدوات التحليل المتطورة</h3>
+                    <p>تحليل مواقع الويب وحسابات السوشيال ميديا بدقة واحترافية</p>
+                </div>
+                
+                <div class="footer-links">
+                    <a href="#" title="GitHub"><i class="fab fa-github"></i></a>
+                    <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" title="Facebook"><i class="fab fa-facebook"></i></a>
+                </div>
+                
+                <div class="footer-info">
+                    <div class="footer-copyright">
+                        &copy; 2025 أدوات التحليل المتطورة. جميع الحقوق محفوظة.
+                    </div>
+                    <div class="footer-tech">
+                        <i class="fas fa-code"></i>
+                        صُنع بـ HTML5, CSS3 & JavaScript
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
